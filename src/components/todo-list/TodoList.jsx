@@ -1,18 +1,20 @@
 import { MyButton, TodoItem } from '..';
 import styles from './TodoList.module.css';
 import { InputForm } from '../input-form/InputForm';
-import { useState } from 'react';
-import { requestDeleteTodo } from '../../store/action-creators/requestDeleteTodo';
+import {
+	requestDeleteTodo,
+	requestUpdateTodo,
+	setUpdatingTodo,
+	setTodoText,
+	setEditId,
+} from '../../store/action-creators';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodoText } from '../../store/action-creators/setTodoText';
-import { requestUpdateTodo } from '../../store/action-creators/requestUpdateTodo';
 
 export const TodoList = () => {
-	const { todoList, todoText } = useSelector((state) => state.todo);
+	const { todoList, todoText, updateInputOpen, editId } = useSelector(
+		(state) => state.todo,
+	);
 	const dispatch = useDispatch();
-
-	const [isInputOpen, setIsInputOpen] = useState(false);
-	const [editId, setEditId] = useState(null);
 
 	const onEditTodoTitle = (id) => {
 		const [editingTodo] = todoList.filter((todo) => id === todo.id);
@@ -20,25 +22,23 @@ export const TodoList = () => {
 	};
 
 	const handleUpdate = (id) => {
-		setEditId(id);
-		return dispatch( requestUpdateTodo(id));
+		dispatch(setEditId(id));
+		return dispatch(requestUpdateTodo(id, todoText));
 	};
 
-	const openEditForm = (id) => {
-		setEditId(id);
+	const openUpdateForm = (id) => {
+		dispatch(setEditId(id));
 		onEditTodoTitle(id);
-		setIsInputOpen(true);
+		dispatch(setUpdatingTodo(true));
 	};
 
 	return (
 		<div>
-			{isInputOpen && (
+			{updateInputOpen && (
 				<InputForm
-					setIsInputOpen={setIsInputOpen}
+					setIsInputOpen={setUpdatingTodo}
 					label={'Изменить'}
-					setTodoText={setTodoText}
 					handleSubmit={() => handleUpdate(editId)}
-					todoText={todoText}
 				/>
 			)}
 			{todoList.map(({ id, title, completed }, index) => (
@@ -53,7 +53,7 @@ export const TodoList = () => {
 					<MyButton
 						id={id}
 						onClick={() => {
-							openEditForm(id);
+							openUpdateForm(id);
 						}}
 						name={'update-btn'}
 						label={'Изменить'}

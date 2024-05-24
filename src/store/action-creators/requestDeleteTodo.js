@@ -1,6 +1,5 @@
 import { setErrorDeleting } from './setErrorDeleting';
 import { setIsDeleting } from './setIsDeleting';
-import { setRefreshTodos } from './setRefreshTodos';
 
 export const requestDeleteTodo = (id) => {
 	return (dispatch) => {
@@ -9,9 +8,7 @@ export const requestDeleteTodo = (id) => {
 			method: 'DELETE',
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then((response) => {
-				dispatch(setRefreshTodos());
-			})
+			.then(() => {})
 			.catch((error) => dispatch(setErrorDeleting(error)))
 			.finally(() => setIsDeleting(false));
 	};

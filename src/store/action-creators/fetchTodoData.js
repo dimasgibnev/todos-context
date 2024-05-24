@@ -1,6 +1,7 @@
-import { setTodoList, setIsLoading } from "../actions/setTodoList";
+import { setTodoList } from "./setTodoList";
+import { setIsLoading } from "./setIsloading";
 
-export const fetchTodoData = (dispatc) => {
+export const fetchTodoData = () => {
     return (dispatch) => {
         dispatch(setIsLoading(true));
 		return fetch('http://localhost:3005/todos')

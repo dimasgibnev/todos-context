@@ -1,6 +1,6 @@
 import styles from './TodoItem.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTodoList } from '../../store/action-creators/setTodoList';
+import { setTodoList } from '../../store/action-creators';
 
 export const TodoItem = ({ id, index, completed, title }) => {
 	const dispatch = useDispatch();

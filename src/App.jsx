@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './App.module.css';
 import { Loader, TodoList, InputForm, MyButton } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { fetchTodoData } from './store/action-creators/fetchTodoData';
-import { requestAddTodo } from './store/action-creators/requestAddTodo';
-import { setSelectedSort } from './store/action-creators/setSelectedSort';
-import { setSearchTerm } from './store/action-creators/setSearchTerm';
-import { setIsCreatingTodo } from './store/action-creators/setIsCreatingTodo';
-import { setTodoText } from './store/action-creators/setTodoText';
+import {
+	fetchTodoData,
+	requestAddTodo,
+	setSelectedSort,
+	setSearchTerm,
+	setTodoText,
+	setCreatingTodo,
+} from './store/action-creators';
 
 export const App = () => {
-	const { todoList, isLoading, refreshTodos, selectedSort, searchTerm, isCreatingTodo, todoText } = useSelector(
-		(state) => state,
-	);
+	const { todoList, selectedSort, searchTerm } = useSelector((state) => state.todo);
+	const { isLoading, isCreatingTodo } = useSelector((state) => state.status);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -33,9 +33,7 @@ export const App = () => {
 	};
 
 	const filteredTodos = todoList.filter((todo) => {
-		if (todo.title) {
-			return todo.title.toLowerCase().includes(searchTerm);
-		}
+		return todo.title.toLowerCase().includes(searchTerm);
 	});
 
 	const getSortedTodos = () => {
@@ -50,17 +48,14 @@ export const App = () => {
 	const sortedTodos = getSortedTodos();
 
 	const createTodo = () => {
-		dispatch(setIsCreatingTodo(true));
+		dispatch(setCreatingTodo(true));
 		dispatch(setTodoText(''));
 	};
 
 	return (
 		<div className={styles.App}>
 			{isCreatingTodo && (
-				<InputForm
-					label={'Создать'}
-					handleSubmit={requestAddTodo}
-				/>
+				<InputForm label={'Создать'} handleSubmit={requestAddTodo} />
 			)}
 			{isLoading ? (
 				<Loader />
@@ -85,9 +80,7 @@ export const App = () => {
 						value={searchTerm}
 						onChange={handleSearch}
 					/>
-					<TodoList
-						todoList={sortedTodos}
-					/>
+					<TodoList todoList={sortedTodos} />
 				</>
 			)}
 		</div>

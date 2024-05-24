@@ -1,6 +1,5 @@
 import { setErrorCreating } from './setErrorCreating';
 import { setIsCreating } from './setIsCreating';
-import { setRefreshTodos } from './setRefreshTodos';
 
 export const requestAddTodo = (todoText) => {
 	return (dispatch) => {
@@ -14,9 +13,7 @@ export const requestAddTodo = (todoText) => {
 			}),
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then((response) => {
-				dispatch(setRefreshTodos());
-			})
+			.then(() => {})
 			.catch((error) => dispatch(setErrorCreating(error)))
 			.finally(() => {
 				dispatch(setIsCreating(true));

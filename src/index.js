@@ -10,3 +10,4 @@ root.render(
 		<App />
 	</Provider>,
 );
+// json-server src/db.json --watch --port 3005 --delay 1000
