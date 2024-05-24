@@ -1,9 +1,21 @@
-import { useContext } from 'react';
 import styles from './TodoItem.module.css';
-import { AppContext } from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodoList } from '../../store/action-creators/setTodoList';
 
-export const TodoItem = ({ id, index, completed, title}) => {
-	const { handleCheck } = useContext(AppContext);
+export const TodoItem = ({ id, index, completed, title }) => {
+	const dispatch = useDispatch();
+	const { todoList } = useSelector((state) => state.todo);
+
+	const handleCheck = (id) => {
+		const updatedList = todoList.map((todo) => {
+			if (todo.id === id) {
+				return { ...todo, completed: !todo.completed };
+			}
+			return todo;
+		});
+		dispatch(setTodoList(updatedList));
+	};
+
 	return (
 		<div className={styles.todo}>
 			<div className={styles['todo__content']}>

@@ -2,24 +2,26 @@ import { MyButton, TodoItem } from '..';
 import styles from './TodoList.module.css';
 import { InputForm } from '../input-form/InputForm';
 import { useState } from 'react';
+import { requestDeleteTodo } from '../../store/action-creators/requestDeleteTodo';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodoText } from '../../store/action-creators/setTodoText';
+import { requestUpdateTodo } from '../../store/action-creators/requestUpdateTodo';
 
-export const TodoList = ({
-	todoList,
-	setTodoText,
-	todoText,
-	requestUpdateTodo,
-	requestDeleteTodo,
-}) => {
+export const TodoList = () => {
+	const { todoList, todoText } = useSelector((state) => state.todo);
+	const dispatch = useDispatch();
+
 	const [isInputOpen, setIsInputOpen] = useState(false);
 	const [editId, setEditId] = useState(null);
+
 	const onEditTodoTitle = (id) => {
 		const [editingTodo] = todoList.filter((todo) => id === todo.id);
-		setTodoText(editingTodo.title);
+		dispatch(setTodoText(editingTodo.title));
 	};
 
 	const handleUpdate = (id) => {
 		setEditId(id);
-		return requestUpdateTodo(id);
+		return dispatch( requestUpdateTodo(id));
 	};
 
 	const openEditForm = (id) => {

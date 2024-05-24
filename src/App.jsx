@@ -1,38 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import { Loader, TodoList, InputForm, MyButton } from './components';
-import {
-	useRequestAddTodo,
-	useRequestGetTodoList,
-	useRequestDeleteTodo,
-	useRequestUpdateTodo,
-} from './hooks';
-import { AppContext } from './context';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { fetchTodoData } from './store/action-creators/fetchTodoData';
+import { requestAddTodo } from './store/action-creators/requestAddTodo';
+import { setSelectedSort } from './store/action-creators/setSelectedSort';
+import { setSearchTerm } from './store/action-creators/setSearchTerm';
+import { setIsCreatingTodo } from './store/action-creators/setIsCreatingTodo';
+import { setTodoText } from './store/action-creators/setTodoText';
 
 export const App = () => {
-	const [selectedSort, setSelectedSort] = useState(false);
-	const [refreshTodos, setRefreshTodos] = useState(false);
-	const [searchTerm, setSearchTerm] = useState('');
-	const [todoText, setTodoText] = useState('');
-	const [isCreatingInputOpen, setIsCreatingInputOpen] = useState(false);
-
-	const { isCreating, requestAddTodo } = useRequestAddTodo(todoText, setRefreshTodos);
-	const { todoList, isLoading, handleCheck } = useRequestGetTodoList(refreshTodos);
-	const { requestDeleteTodo, isDeleting } = useRequestDeleteTodo(setRefreshTodos);
-	const { isUpdating, requestUpdateTodo } = useRequestUpdateTodo(
-		setRefreshTodos,
-		todoText,
+	const { todoList, isLoading, refreshTodos, selectedSort, searchTerm, isCreatingTodo, todoText } = useSelector(
+		(state) => state,
 	);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchTodoData());
+	});
 
 	const sortTodos = () => {
-		setSelectedSort(!selectedSort);
+		dispatch(setSelectedSort(!selectedSort));
 	};
 
 	const handleSearch = ({ target }) => {
 		if (target.value) {
-			setSearchTerm(target.value.toLowerCase());
+			dispatch(setSearchTerm(target.value.toLowerCase()));
 		} else {
-			setSearchTerm(target.value);
+			dispatch(setSearchTerm(target.value));
 		}
 	};
 
@@ -54,55 +50,46 @@ export const App = () => {
 	const sortedTodos = getSortedTodos();
 
 	const createTodo = () => {
-		setIsCreatingInputOpen(true);
-		setTodoText('');
+		dispatch(setIsCreatingTodo(true));
+		dispatch(setTodoText(''));
 	};
 
 	return (
-		<AppContext.Provider value={{ handleCheck, isCreating, isUpdating, isDeleting }}>
-			<div className={styles.App}>
-				{isCreatingInputOpen && (
-					<InputForm
-						setIsInputOpen={setIsCreatingInputOpen}
-						label={'Создать'}
-						setTodoText={setTodoText}
-						todoText={todoText}
-						handleSubmit={requestAddTodo}
+		<div className={styles.App}>
+			{isCreatingTodo && (
+				<InputForm
+					label={'Создать'}
+					handleSubmit={requestAddTodo}
+				/>
+			)}
+			{isLoading ? (
+				<Loader />
+			) : (
+				<>
+					<MyButton
+						name={'todo-add-btn'}
+						label={'Добавить задачу'}
+						onClick={createTodo}
 					/>
-				)}
-				{isLoading ? (
-					<Loader />
-				) : (
-					<>
-						<MyButton
-							name={'todo-add-btn'}
-							label={'Добавить задачу'}
-							onClick={createTodo}
-						/>
 
-						<MyButton
-							onClick={sortTodos}
-							name={'todo-sort-btn'}
-							label={selectedSort ? 'По созданию' : 'По алфавиту'}
-						/>
+					<MyButton
+						onClick={sortTodos}
+						name={'todo-sort-btn'}
+						label={selectedSort ? 'По созданию' : 'По алфавиту'}
+					/>
 
-						<input
-							placeholder="Поиск..."
-							className={styles.input}
-							type="text"
-							value={searchTerm}
-							onChange={handleSearch}
-						/>
-						<TodoList
-							todoList={sortedTodos}
-							setTodoText={setTodoText}
-							todoText={todoText}
-							requestUpdateTodo={requestUpdateTodo}
-							requestDeleteTodo={requestDeleteTodo}
-						/>
-					</>
-				)}
-			</div>
-		</AppContext.Provider>
+					<input
+						placeholder="Поиск..."
+						className={styles.input}
+						type="text"
+						value={searchTerm}
+						onChange={handleSearch}
+					/>
+					<TodoList
+						todoList={sortedTodos}
+					/>
+				</>
+			)}
+		</div>
 	);
 };

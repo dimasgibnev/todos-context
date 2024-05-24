@@ -1,8 +1,11 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { MyButton } from '..';
 import styles from './InputForm.module.css';
+import { setTodoText } from '../../store/action-creators/setTodoText';
 
-
-export const InputForm = ({ handleSubmit, todoText, setTodoText, id, label, setIsInputOpen }) => {
+export const InputForm = ({ handleSubmit, id, label, setIsInputOpen }) => {
+	const { todoText } = useSelector((state) => state.todo);
+	const dispatch = useDispatch();
 
 	return (
 		<form
@@ -16,7 +19,7 @@ export const InputForm = ({ handleSubmit, todoText, setTodoText, id, label, setI
 			<input
 				type="text"
 				value={todoText}
-				onChange={(e) => setTodoText(e.target.value)}
+				onChange={(e) => dispatch(setTodoText(e.target.value))}
 			/>
 			<MyButton
 				onClick={() => {}}
