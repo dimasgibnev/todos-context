@@ -8,7 +8,6 @@ import {
 	setSelectedSort,
 	setSearchTerm,
 	setTodoText,
-	setCreatingTodo,
 } from './store/action-creators';
 
 export const App = () => {
@@ -34,7 +33,9 @@ export const App = () => {
 	};
 
 	const filteredTodos = todoList.filter((todo) => {
-		return todo.title.toLowerCase().includes(searchTerm);
+		if (todo.title) {
+			return todo.title.toLowerCase().includes(searchTerm);
+		}
 	});
 
 	const getSortedTodos = () => {
@@ -58,7 +59,7 @@ export const App = () => {
 			{isCreating && (
 				<InputForm
 					label={'Создать'}
-					handleSubmit={requestAddTodo}
+					request={requestAddTodo}
 					setIsInputOpen={setIsCreating}
 				/>
 			)}

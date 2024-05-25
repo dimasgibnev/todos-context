@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { MyButton } from '..';
 import styles from './InputForm.module.css';
-import { requestAddTodo, setTodoText } from '../../store/action-creators';
+import {  setTodoText } from '../../store/action-creators';
 
-export const InputForm = ({ handleSubmit, id, label, setIsInputOpen }) => {
+export const InputForm = ({ request, id, label, setIsInputOpen }) => {
 	const { todoText } = useSelector((state) => state.todo);
 	const dispatch = useDispatch();
 
@@ -11,7 +11,7 @@ export const InputForm = ({ handleSubmit, id, label, setIsInputOpen }) => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				requestAddTodo(id, todoText);
+				dispatch(request(id, todoText));
 				setIsInputOpen(false);
 			}}
 			className={styles.form}

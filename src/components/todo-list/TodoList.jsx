@@ -4,9 +4,9 @@ import { InputForm } from '../input-form/InputForm';
 import {
 	requestDeleteTodo,
 	requestUpdateTodo,
-	setUpdatingTodo,
 	setTodoText,
 	setEditId,
+	setIsDeleting,
 } from '../../store/action-creators';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export const TodoList = () => {
 		<div>
 			{isUpdating && (
 				<InputForm
-					setIsInputOpen={setIsUpdating}
+					request={setIsUpdating}
 					label={'Изменить'}
 					handleSubmit={() => handleUpdate(editId)}
 				/>

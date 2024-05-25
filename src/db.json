@@ -1,7 +1,6 @@
 {
   "todos": [
     {
-      "title": "Использовать Context в приложении",
       "completed": false,
       "id": 1
     }
