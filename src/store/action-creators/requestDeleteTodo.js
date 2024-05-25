@@ -1,3 +1,4 @@
+import { fetchTodoData } from './fetchTodoData';
 import { setErrorDeleting } from './setErrorDeleting';
 import { setIsDeleting } from './setIsDeleting';
 
@@ -8,7 +9,9 @@ export const requestDeleteTodo = (id) => {
 			method: 'DELETE',
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then(() => {})
+			.then(() => {
+				dispatch(fetchTodoData());
+			})
 			.catch((error) => dispatch(setErrorDeleting(error)))
 			.finally(() => setIsDeleting(false));
 	};

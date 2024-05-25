@@ -9,12 +9,14 @@ import {
 	setEditId,
 } from '../../store/action-creators';
 import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 
 export const TodoList = () => {
-	const { todoList, todoText, updateInputOpen, editId } = useSelector(
+	const { todoList, todoText, editId } = useSelector(
 		(state) => state.todo,
 	);
 	const dispatch = useDispatch();
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	const onEditTodoTitle = (id) => {
 		const [editingTodo] = todoList.filter((todo) => id === todo.id);
@@ -27,16 +29,16 @@ export const TodoList = () => {
 	};
 
 	const openUpdateForm = (id) => {
+		setIsUpdating(true)
 		dispatch(setEditId(id));
 		onEditTodoTitle(id);
-		dispatch(setUpdatingTodo(true));
 	};
 
 	return (
 		<div>
-			{updateInputOpen && (
+			{isUpdating && (
 				<InputForm
-					setIsInputOpen={setUpdatingTodo}
+					setIsInputOpen={setIsUpdating}
 					label={'Изменить'}
 					handleSubmit={() => handleUpdate(editId)}
 				/>

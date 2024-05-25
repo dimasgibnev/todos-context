@@ -5,8 +5,6 @@ const initialStatusState = {
 	isUpdating: false,
 	isCreating: false,
 	isDeleting: false,
-	createInputOpen: false,
-	updateInputOpen: false,
 };
 
 export const statusReducer = (state = initialStatusState, action) => {
@@ -35,18 +33,7 @@ export const statusReducer = (state = initialStatusState, action) => {
 				isUpdating: action.payload,
 			};
 		}
-		case actions.SET_CREATING_TODO: {
-			return {
-				...state,
-				createInputOpen: action.payload,
-			};
-		}
-		case actions.SET_UPDATING_TODO: {
-			return {
-				...state,
-				updateInputOpen: action.payload,
-			};
-		}
+
 		default: {
 			return state;
 		}

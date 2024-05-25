@@ -1,7 +1,8 @@
+import { addTodo } from './addTodo';
 import { setErrorCreating } from './setErrorCreating';
 import { setIsCreating } from './setIsCreating';
 
-export const requestAddTodo = (todoText) => {
+export const requestAddTodo = (id, todoText) => {
 	return (dispatch) => {
 		dispatch(setIsCreating(true));
 		return fetch('http://localhost:3005/todos', {
@@ -13,10 +14,12 @@ export const requestAddTodo = (todoText) => {
 			}),
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then(() => {})
+			.then((todoData) => {
+				dispatch(addTodo(todoData));
+			})
 			.catch((error) => dispatch(setErrorCreating(error)))
 			.finally(() => {
-				dispatch(setIsCreating(true));
+				dispatch(setIsCreating(false));
 			});
 	};
 };

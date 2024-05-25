@@ -1,3 +1,4 @@
+import { TodoList } from '../../components';
 import { actions } from '../actions/actions';
 
 const initialTodoState = {
@@ -38,6 +39,12 @@ export const todoReducer = (state = initialTodoState, action) => {
 			return {
 				...state,
 				editId: action.payload,
+			};
+		}
+		case actions.ADD_TODO: {
+			return {
+				...state,
+				TodoList: [...state.todoList, action.payload],
 			};
 		}
 		default: {

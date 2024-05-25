@@ -1,3 +1,4 @@
+import { fetchTodoData } from './fetchTodoData';
 import { setErrorUpdating } from './setErrorUpdating';
 import { setIsUpdating } from './setIsUpdating';
 
@@ -13,7 +14,9 @@ export const requestUpdateTodo = (id, todoText) => {
 			}),
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then(() => {})
+			.then(() => {
+				dispatch(fetchTodoData());
+			})
 			.catch((error) => dispatch(setErrorUpdating(error)))
 			.finally(() => dispatch(setIsUpdating(false)));
 	};

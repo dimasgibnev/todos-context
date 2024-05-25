@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import { Loader, TodoList, InputForm, MyButton } from './components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,12 +13,13 @@ import {
 
 export const App = () => {
 	const { todoList, selectedSort, searchTerm } = useSelector((state) => state.todo);
-	const { isLoading, isCreatingTodo } = useSelector((state) => state.status);
+	const { isLoading } = useSelector((state) => state.status);
 	const dispatch = useDispatch();
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchTodoData());
-	});
+	}, []);
 
 	const sortTodos = () => {
 		dispatch(setSelectedSort(!selectedSort));
@@ -48,14 +49,18 @@ export const App = () => {
 	const sortedTodos = getSortedTodos();
 
 	const createTodo = () => {
-		dispatch(setCreatingTodo(true));
+		setIsCreating(true);
 		dispatch(setTodoText(''));
 	};
 
 	return (
 		<div className={styles.App}>
-			{isCreatingTodo && (
-				<InputForm label={'Создать'} handleSubmit={requestAddTodo} />
+			{isCreating && (
+				<InputForm
+					label={'Создать'}
+					handleSubmit={requestAddTodo}
+					setIsInputOpen={setIsCreating}
+				/>
 			)}
 			{isLoading ? (
 				<Loader />
