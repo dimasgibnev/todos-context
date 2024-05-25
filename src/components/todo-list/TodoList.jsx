@@ -6,15 +6,12 @@ import {
 	requestUpdateTodo,
 	setTodoText,
 	setEditId,
-	setIsDeleting,
 } from '../../store/action-creators';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 
-export const TodoList = () => {
-	const { todoList, todoText, editId } = useSelector(
-		(state) => state.todo,
-	);
+export const TodoList = ({ todoList }) => {
+	const { todoText, editId } = useSelector((state) => state.todo);
 	const dispatch = useDispatch();
 	const [isUpdating, setIsUpdating] = useState(false);
 
@@ -23,13 +20,8 @@ export const TodoList = () => {
 		dispatch(setTodoText(editingTodo.title));
 	};
 
-	const handleUpdate = (id) => {
-		dispatch(setEditId(id));
-		return dispatch(requestUpdateTodo(id, todoText));
-	};
-
 	const openUpdateForm = (id) => {
-		setIsUpdating(true)
+		setIsUpdating(true);
 		dispatch(setEditId(id));
 		onEditTodoTitle(id);
 	};
@@ -38,9 +30,9 @@ export const TodoList = () => {
 		<div>
 			{isUpdating && (
 				<InputForm
-					request={setIsUpdating}
+					setIsInputOpen={setIsUpdating}
 					label={'Изменить'}
-					handleSubmit={() => handleUpdate(editId)}
+					request={requestUpdateTodo}
 				/>
 			)}
 			{todoList.map(({ id, title, completed }, index) => (
@@ -48,7 +40,9 @@ export const TodoList = () => {
 					<TodoItem id={id} title={title} completed={completed} index={index} />
 					<MyButton
 						id={id}
-						onClick={requestDeleteTodo}
+						onClick={() => {
+							dispatch(requestDeleteTodo(id))
+						}}
 						name={'delete-btn'}
 						label={'Удалить'}
 					/>

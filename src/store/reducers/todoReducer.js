@@ -1,4 +1,3 @@
-import { TodoList } from '../../components';
 import { actions } from '../actions/actions';
 
 const initialTodoState = {
@@ -44,7 +43,7 @@ export const todoReducer = (state = initialTodoState, action) => {
 		case actions.ADD_TODO: {
 			return {
 				...state,
-				TodoList: [...state.todoList, action.payload],
+				todoList: [...state.todoList, action.payload],
 			};
 		}
 		default: {

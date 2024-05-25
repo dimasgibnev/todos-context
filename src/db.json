@@ -1,6 +1,7 @@
 {
   "todos": [
     {
+      "title": "Добавить redux в приложение",
       "completed": false,
       "id": 1
     }

@@ -1,17 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { MyButton } from '..';
 import styles from './InputForm.module.css';
-import {  setTodoText } from '../../store/action-creators';
+import { setTodoText } from '../../store/action-creators';
 
-export const InputForm = ({ request, id, label, setIsInputOpen }) => {
-	const { todoText } = useSelector((state) => state.todo);
+export const InputForm = ({ request, label, setIsInputOpen }) => {
+	const { todoText, editId } = useSelector((state) => state.todo);
 	const dispatch = useDispatch();
+
+	const addTodo = async () => {
+		await dispatch(request(editId, todoText));
+	};
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				dispatch(request(id, todoText));
 				setIsInputOpen(false);
 			}}
 			className={styles.form}
@@ -22,7 +25,7 @@ export const InputForm = ({ request, id, label, setIsInputOpen }) => {
 				onChange={(e) => dispatch(setTodoText(e.target.value))}
 			/>
 			<MyButton
-				onClick={() => {}}
+				onClick={addTodo}
 				type={'submit'}
 				name={'add-todo'}
 				label={label}
